@@ -48,6 +48,12 @@ mod tests {
   fn day_1_pt_1() {
     let inp = Input::load_from_day(1);
     let sol = D1::pt_1(inp);
-    assert_eq!(sol, 74711);
+    assert_eq!(sol, 74_711);
+  }
+  #[test]
+  fn day_1_pt_2() {
+    let inp = Input::load_from_day(1);
+    let sol = D1::pt_2(inp);
+    assert_eq!(sol, 209_481);
   }
 }
