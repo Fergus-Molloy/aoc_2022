@@ -18,6 +18,6 @@ name = "aoc_2022"
 criterion = "0.4"
 
 [[bench]]
-name = "my_benchmark"
+name = "solutions"
 harness = false
 
