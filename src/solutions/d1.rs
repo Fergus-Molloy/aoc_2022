@@ -7,15 +7,15 @@ impl Solution for D1 {
   fn pt_1(inp: Input) -> u64 {
     let mut max = 0;
     let mut acc = 0;
-    for snack in inp.lines() {
-      if let Ok(val) = snack.parse::<u64>() {
+    for elf in inp.get().split("\n\n") {
+      for snack in elf.lines() {
+        let val = snack.parse::<u64>().unwrap();
         acc += val;
-      } else {
-        if acc > max {
-          max = acc;
-        }
-        acc = 0;
       }
+      if acc > max {
+        max = acc;
+      }
+      acc = 0;
     }
     max
   }
