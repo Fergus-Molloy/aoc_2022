@@ -24,20 +24,16 @@ impl PartialOrd for Choice {
       Choice::Scissors if other == &Choice::Rock => Some(Ordering::Less),
       Choice::Scissors if other == &Choice::Paper => Some(Ordering::Greater),
       Choice::Scissors | Choice::Paper | Choice::Rock => Some(Ordering::Equal),
-      _ => None,
     }
   }
 }
 
-impl TryFrom<&str> for Choice {
-  type Error = String;
-
-  fn try_from(value: &str) -> Result<Self, Self::Error> {
+impl From<&str> for Choice {
+  fn from(value: &str) -> Self {
     match value {
-      "A" | "X" => Ok(Choice::Rock),
-      "B" | "Y" => Ok(Choice::Paper),
-      "C" | "Z" => Ok(Choice::Scissors),
-      _ => Err(format!("Un-recognized choice {value}")),
+      "B" | "Y" => Choice::Paper,
+      "C" | "Z" => Choice::Scissors,
+      _ => Choice::Rock,
     }
   }
 }
@@ -50,15 +46,12 @@ fn get_result(a: Choice, b: Choice) -> u64 {
   };
   b as u64 + result
 }
-impl TryFrom<&str> for Outcome {
-  type Error = String;
-
-  fn try_from(value: &str) -> Result<Self, Self::Error> {
+impl From<&str> for Outcome {
+  fn from(value: &str) -> Self {
     match value {
-      "X" => Ok(Outcome::Loss),
-      "Y" => Ok(Outcome::Draw),
-      "Z" => Ok(Outcome::Win),
-      _ => Err(format!("Un-recognized choice {value}")),
+      "Y" => Outcome::Draw,
+      "Z" => Outcome::Win,
+      _ => Outcome::Loss,
     }
   }
 }
@@ -70,19 +63,16 @@ enum Outcome {
   Loss = 0,
 }
 
-fn get_result_given_outcome(a: Choice, outcome: Outcome) -> Result<u64, String> {
+fn get_result_given_outcome(a: Choice, outcome: Outcome) -> u64 {
   match outcome {
-    Outcome::Draw => Ok(a as u64 + 3),
-    Outcome::Loss if a == Choice::Rock => Ok(Choice::Scissors as u64),
-    Outcome::Loss if a == Choice::Paper => Ok(Choice::Rock as u64),
-    Outcome::Loss if a == Choice::Scissors => Ok(Choice::Paper as u64),
-    Outcome::Win if a == Choice::Rock => Ok(Choice::Paper as u64 + 6),
-    Outcome::Win if a == Choice::Paper => Ok(Choice::Scissors as u64 + 6),
-    Outcome::Win if a == Choice::Scissors => Ok(Choice::Rock as u64 + 6),
-    _ => Err(format!(
-      "Could not get result for opponent choice {:?} and outcome {:?}",
-      a, outcome
-    )),
+    Outcome::Draw => a as u64 + 3,
+    Outcome::Loss if a == Choice::Rock => Choice::Scissors as u64,
+    Outcome::Loss if a == Choice::Paper => Choice::Rock as u64,
+    Outcome::Loss if a == Choice::Scissors => Choice::Paper as u64,
+    Outcome::Win if a == Choice::Rock => Choice::Paper as u64 + 6,
+    Outcome::Win if a == Choice::Paper => Choice::Scissors as u64 + 6,
+    Outcome::Win if a == Choice::Scissors => Choice::Rock as u64 + 6,
+    _ => 0,
   }
 }
 
@@ -95,10 +85,8 @@ impl Solution for D2 {
       .map(|x| {
         let round = x
           .split(' ')
-          .map(std::convert::TryInto::try_into)
-          .into_iter()
-          .collect::<Result<Vec<Choice>, String>>()
-          .unwrap();
+          .map(std::convert::From::from)
+          .collect::<Vec<Choice>>();
         get_result(round[0], round[1])
       })
       .sum::<u64>()
@@ -108,9 +96,27 @@ impl Solution for D2 {
       .lines()
       .map(|x| {
         let round = x.split(' ').collect::<Vec<&str>>();
-        get_result_given_outcome(round[0].try_into().unwrap(), round[1].try_into().unwrap())
-          .unwrap()
+        get_result_given_outcome(round[0].into(), round[1].into())
       })
       .sum::<u64>()
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use crate::Input;
+
+  #[test]
+  fn day_2_pt_1() {
+    let inp = Input::load_from_day(2);
+    let sol = D2::pt_1(inp);
+    assert_eq!(sol, 8392);
+  }
+  #[test]
+  fn day_2_pt_2() {
+    let inp = Input::load_from_day(2);
+    let sol = D2::pt_2(inp);
+    assert_eq!(sol, 10116);
   }
 }
