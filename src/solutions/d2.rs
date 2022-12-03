@@ -11,7 +11,7 @@ enum Choice {
 }
 impl Ord for Choice {
   fn cmp(&self, other: &Self) -> Ordering {
-    self.partial_cmp(other).unwrap()
+    self.partial_cmp(other).expect("No choice should be None")
   }
 }
 impl PartialOrd for Choice {
