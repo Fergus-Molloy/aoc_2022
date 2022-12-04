@@ -5,6 +5,7 @@ use super::Solution;
 
 pub struct D3;
 fn get_value(c: char) -> u64 {
+  #![allow(clippy::cast_lossless)]
   if c.is_ascii_uppercase() {
     (c as u8 - 38) as u64
   } else {

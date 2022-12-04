@@ -1,8 +1,7 @@
-use std::cmp::Ordering;
-
-use crate::Input;
-
 use super::Solution;
+use crate::Input;
+use arrayvec::ArrayVec;
+use std::cmp::Ordering;
 
 pub struct D4;
 
@@ -11,15 +10,15 @@ struct Elf {
   range_max: u32,
 }
 
-fn get_range(input: &str) -> Result<(u32, u32), String> {
-  let nums = input.split('-').collect::<Vec<&str>>();
-  let lower = nums[0]
-    .parse::<u32>()
-    .map_err(|_| "could not parse lower bound".to_string())?;
-  let upper = nums[1]
-    .parse::<u32>()
-    .map_err(|_| "could not parse upper bound".to_string())?;
-  Ok((lower, upper))
+fn get_elf_from_range(input: &str) -> Elf {
+  let nums = input
+    .split('-')
+    .map(|x| x.parse().expect(""))
+    .collect::<ArrayVec<u32, 2>>();
+  Elf {
+    range_min: nums[0],
+    range_max: nums[1],
+  }
 }
 
 impl Solution for D4 {
@@ -28,15 +27,9 @@ impl Solution for D4 {
       .lines()
       .filter(|l| {
         let elfs = l
-          .split(",")
-          .map(|r| {
-            let range = get_range(r).expect("Could not get range");
-            Elf {
-              range_max: range.1,
-              range_min: range.0,
-            }
-          })
-          .collect::<Vec<Elf>>();
+          .split(',')
+          .map(get_elf_from_range)
+          .collect::<ArrayVec<Elf, 2>>();
 
         let min_cmp = elfs[0].range_min.cmp(&elfs[1].range_min);
         let max_cmp = elfs[0].range_max.cmp(&elfs[1].range_max);
@@ -55,15 +48,9 @@ impl Solution for D4 {
       .lines()
       .filter(|l| {
         let elfs = l
-          .split(",")
-          .map(|r| {
-            let range = get_range(r).expect("Could not get range");
-            Elf {
-              range_max: range.1,
-              range_min: range.0,
-            }
-          })
-          .collect::<Vec<Elf>>();
+          .split(',')
+          .map(get_elf_from_range)
+          .collect::<ArrayVec<Elf, 2>>();
 
         (elfs[0].range_min < elfs[1].range_min && elfs[0].range_max >= elfs[1].range_min)
           || (elfs[0].range_min > elfs[1].range_min && elfs[0].range_min <= elfs[1].range_max)

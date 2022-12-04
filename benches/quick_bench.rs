@@ -1,4 +1,5 @@
 #![feature(iter_array_chunks)]
+#![allow(clippy::pedantic)]
 use rustc_hash::FxHashSet;
 
 use aoc_2022::{

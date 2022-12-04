@@ -1,3 +1,4 @@
+#![allow(clippy::pedantic)]
 use aoc_2022::{solutions::*, Input};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
