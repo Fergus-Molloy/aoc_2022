@@ -16,7 +16,7 @@ name = "aoc_2022"
 rustc-hash = "1.1.0"
 
 [dev-dependencies]
-criterion = "0.4"
+criterion = { version = '0.4', features=['real_blackbox'] }
 
 [[bench]]
 name = "solutions"
@@ -25,3 +25,8 @@ harness = false
 [[bench]]
 name = "quick_bench"
 harness = false
+
+
+[profile.bench]
+lto = true
+panic = "abort"
