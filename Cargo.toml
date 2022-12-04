@@ -13,7 +13,6 @@ path = "src/main.rs"
 name = "aoc_2022"
 
 [dependencies]
-ahash = "0.8.2"
 rustc-hash = "1.1.0"
 
 [dev-dependencies]

@@ -54,12 +54,12 @@ mod tests {
   use super::D3;
 
   #[test]
-  fn day_three_pt_1() {
+  fn day_3_pt_1() {
     let inp = Input::load_from_day(3);
     assert_eq!(8515, D3::pt_1(inp));
   }
   #[test]
-  fn day_three_pt_2() {
+  fn day_3_pt_2() {
     let inp = Input::load_from_day(3);
     assert_eq!(2434, D3::pt_2(inp));
   }
