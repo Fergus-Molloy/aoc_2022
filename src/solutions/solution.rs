@@ -1,8 +1,9 @@
 use crate::input::Input;
 
 pub trait Solution {
-  fn pt_1(inp: Input) -> u64;
-  fn pt_2(inp: Input) -> u64;
+  type Output;
+  fn pt_1(inp: Input) -> Self::Output;
+  fn pt_2(inp: Input) -> Self::Output;
 
   #[inline]
   fn time_pt_1(inp: Input) -> std::time::Duration {

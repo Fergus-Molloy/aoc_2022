@@ -23,4 +23,9 @@ impl<'a> Input {
   pub fn lines(&'a self) -> Lines<'a> {
     self.0.lines()
   }
+
+  #[inline]
+  pub fn get(self) -> String {
+    self.0
+  }
 }

@@ -22,6 +22,7 @@ fn get_elf_from_range(input: &str) -> Elf {
 }
 
 impl Solution for D4 {
+  type Output = u64;
   fn pt_1(inp: Input) -> u64 {
     inp
       .lines()

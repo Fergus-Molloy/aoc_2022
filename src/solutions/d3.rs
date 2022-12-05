@@ -12,6 +12,7 @@ fn get_value(c: char) -> u64 {
 }
 
 impl Solution for D3 {
+  type Output = u64;
   fn pt_1(inp: Input) -> u64 {
     inp
       .lines()

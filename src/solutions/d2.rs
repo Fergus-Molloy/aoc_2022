@@ -1,3 +1,5 @@
+use arrayvec::ArrayVec;
+
 use crate::Input;
 use std::cmp::Ordering;
 
@@ -79,6 +81,7 @@ fn get_result_given_outcome(a: Choice, outcome: Outcome) -> u64 {
 pub struct D2;
 
 impl Solution for D2 {
+  type Output = u64;
   fn pt_1(inp: Input) -> u64 {
     inp
       .lines()
@@ -86,7 +89,7 @@ impl Solution for D2 {
         let round = x
           .split(' ')
           .map(std::convert::From::from)
-          .collect::<Vec<Choice>>();
+          .collect::<ArrayVec<Choice, 2>>();
         get_result(round[0], round[1])
       })
       .sum::<u64>()
@@ -95,7 +98,7 @@ impl Solution for D2 {
     inp
       .lines()
       .map(|x| {
-        let round = x.split(' ').collect::<Vec<&str>>();
+        let round = x.split(' ').collect::<ArrayVec<&str, 2>>();
         get_result_given_outcome(round[0].into(), round[1].into())
       })
       .sum::<u64>()
