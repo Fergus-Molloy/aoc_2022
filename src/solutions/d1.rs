@@ -4,12 +4,12 @@ use crate::Input;
 pub struct D1;
 
 impl Solution for D1 {
-  type Output = u64;
-  fn pt_1(inp: Input) -> u64 {
+  type Output = u32;
+  fn pt_1(inp: Input) -> Self::Output {
     let mut max = 0;
     let mut acc = 0;
     for snack in inp.lines() {
-      if let Ok(val) = snack.parse::<u64>() {
+      if let Ok(val) = snack.parse::<u32>() {
         acc += val;
       } else {
         if acc > max {
@@ -21,11 +21,11 @@ impl Solution for D1 {
     max
   }
 
-  fn pt_2(inp: crate::input::Input) -> u64 {
+  fn pt_2(inp: crate::input::Input) -> Self::Output {
     let mut max = vec![0, 0, 0];
     let mut acc = 0;
     for snack in inp.lines() {
-      if let Ok(val) = snack.parse::<u64>() {
+      if let Ok(val) = snack.parse::<u32>() {
         acc += val;
       } else {
         let min = max.iter().min().unwrap();

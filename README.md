@@ -12,6 +12,6 @@ Compiled with `RUSTFLAGS="-C target-cpu=native"`
 |Day 03, pt 2|**29.615 µs**|
 |Day 04, pt 1|**35.688 µs**|
 |Day 04, pt 2|**35.180 µs**|
-|Day 05, pt 1|**29.917 µs**|
-|Day 05, pt 2|**36.487 µs**|
+|Day 05, pt 1|**28.994 µs**|
+|Day 05, pt 2|**34.844 µs**|
 |---|---|

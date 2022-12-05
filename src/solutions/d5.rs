@@ -1,8 +1,10 @@
+use lazy_format::lazy_format;
 use std::collections::VecDeque;
 
 use super::Solution;
 use crate::Input;
-use arrayvec::ArrayVec;
+use arrayvec::{ArrayString, ArrayVec};
+use joinery::JoinableIterator;
 use nom::{
   bytes::complete::{is_not, take},
   character::complete::{alpha0, char, digit1},
@@ -15,7 +17,7 @@ pub struct D5;
 
 #[derive(Debug, Clone)]
 struct CratesStacks {
-  stacks: ArrayVec<VecDeque<String>, 10>,
+  stacks: ArrayVec<VecDeque<ArrayString<1>>, 10>,
 }
 
 fn get_crate(inp: &str) -> IResult<&str, &str> {
@@ -30,7 +32,7 @@ fn get_next_crate(inp: &str) -> IResult<&str, &str> {
 
 fn parse_crate_stacks(inp: &str) -> CratesStacks {
   let inp = inp.lines().rev();
-  let mut stacks: ArrayVec<VecDeque<String>, 10> = ArrayVec::default();
+  let mut stacks: ArrayVec<VecDeque<ArrayString<1>>, 10> = ArrayVec::default();
   for _ in 0..10 {
     stacks.push(VecDeque::new());
   }
@@ -42,7 +44,7 @@ fn parse_crate_stacks(inp: &str) -> CratesStacks {
       };
       line = rest;
       if let Ok((_, c)) = get_crate(crate_str) {
-        stacks[idx].push_back(c.to_owned());
+        stacks[idx].push_back(ArrayString::from(c).unwrap());
       }
       idx += 1;
     }
@@ -92,11 +94,12 @@ impl Solution for D5 {
       }
     }
 
-    let mut out = String::new();
-    for stack in crates.stacks {
-      out = format!("{out}{}", stack.iter().last().unwrap_or(&String::new()));
-    }
-    out
+    crates
+      .stacks
+      .iter()
+      .map(|s| lazy_format!("{}", s.iter().last().unwrap_or(&ArrayString::new())))
+      .join_with("")
+      .to_string()
   }
 
   fn pt_2(inp: Input) -> String {
@@ -113,11 +116,12 @@ impl Solution for D5 {
       crates.stacks[instruction.to].append(&mut moved);
     }
 
-    let mut out = String::new();
-    for stack in crates.stacks {
-      out = format!("{out}{}", stack.iter().last().unwrap_or(&String::new()));
-    }
-    out
+    crates
+      .stacks
+      .iter()
+      .map(|s| lazy_format!("{}", s.iter().last().unwrap_or(&ArrayString::new())))
+      .join_with("")
+      .to_string()
   }
 }
 
