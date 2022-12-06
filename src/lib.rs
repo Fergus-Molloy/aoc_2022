@@ -4,3 +4,4 @@ mod input;
 pub mod solutions;
 
 pub use input::Input;
+pub use solutions::Solution;
