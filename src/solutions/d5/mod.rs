@@ -73,8 +73,7 @@ mod tests {
 move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
-move 1 from 1 to 2"
-        .to_string(),
+move 1 from 1 to 2",
     );
     let sol = D5::pt_1(inp);
     assert_eq!("CMZ".to_string(), sol);
@@ -91,8 +90,7 @@ move 1 from 1 to 2"
 move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
-move 1 from 1 to 2"
-        .to_string(),
+move 1 from 1 to 2",
     );
     let sol = D5::pt_2(inp);
     assert_eq!("MCD".to_string(), sol);

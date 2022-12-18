@@ -38,13 +38,13 @@ mod tests {
 
   #[test]
   fn example_d6_pt1() {
-    let inp = Input::new("bvwbjplbgvbhsrlpgdmjqwftvncz".to_string());
+    let inp = Input::new("bvwbjplbgvbhsrlpgdmjqwftvncz");
     let sol = D6::pt_1(inp);
     assert_eq!(5, sol);
   }
   #[test]
   fn example_d6_pt2() {
-    let inp = Input::new("bvwbjplbgvbhsrlpgdmjqwftvncz".to_string());
+    let inp = Input::new("bvwbjplbgvbhsrlpgdmjqwftvncz");
     let sol = D6::pt_2(inp);
     assert_eq!(23, sol);
   }

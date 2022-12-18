@@ -13,8 +13,8 @@ impl Input {
     )
   }
 
-  pub fn new(s: String) -> Self {
-    Self(s)
+  pub fn new<T: AsRef<str>>(s: T) -> Self {
+    Self(s.as_ref().to_string())
   }
 }
 
