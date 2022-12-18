@@ -4,6 +4,7 @@ mod d3;
 mod d4;
 mod d5;
 mod d6;
+mod d7;
 mod solution;
 
 pub use crate::solutions::d1::D1;
@@ -12,4 +13,5 @@ pub use crate::solutions::d3::D3;
 pub use crate::solutions::d4::D4;
 pub use crate::solutions::d5::D5;
 pub use crate::solutions::d6::D6;
+pub use crate::solutions::d7::D7;
 pub use crate::solutions::solution::Solution;
