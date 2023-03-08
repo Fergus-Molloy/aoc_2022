@@ -1,40 +1,26 @@
-pub mod directions;
+mod directions;
+mod traverse;
+mod util;
 
 use crate::Solution;
 pub use directions::Directions;
+pub use traverse::BreadthFirstSearch;
+use util::*;
+
+use self::traverse::Traverse;
 
 pub struct D12;
-#[derive(Debug)]
-struct Coord {
-  x: usize,
-  y: usize,
-}
-
-impl Default for Coord {
-  fn default() -> Self {
-    Coord { x: 0, y: 0 }
-  }
-}
-#[derive(Debug)]
-struct BoundedCoord {
-  x: usize,
-  y: usize,
-  x_bound: usize,
-  y_bound: usize,
-}
 
 #[derive(Debug)]
 pub struct Map {
   map: Vec<Vec<i64>>,
-  pos: BoundedCoord,
+  pub pos: Coord,
   end: Coord,
+  bounds: Bounds,
 }
 
-const S: i64 = 83;
-const E: i64 = 69;
-
-impl From<String> for Map {
-  fn from(value: String) -> Self {
+impl Map {
+  fn new(value: String) -> Self {
     let map: Vec<Vec<i64>> = value
       .lines()
       .map(|line| line.chars().map(|c| c as i64).collect())
@@ -53,45 +39,62 @@ impl From<String> for Map {
     }
     Self {
       map,
-      pos: BoundedCoord {
-        x: start.x,
-        y: start.y,
-        x_bound,
-        y_bound,
+      bounds: Bounds {
+        x: x_bound,
+        y: y_bound,
       },
+      pos: start,
       end,
     }
   }
 }
 
 impl Map {
-  fn get_possible_moves(&self) -> Directions<()> {
-    let h = self.get_height(&self.pos);
+  fn traverse<T: Traverse>(&self, mut method: T) -> Vec<Move> {
+    method.find_end(self)
+  }
 
-    let heights = self.get_height_surrounding(&self.pos);
+  fn is_end(&self, pos: &Coord) -> bool {
+    self.get_height(pos) == E
+  }
+
+  fn get_possible_moves(&self, pos: &Coord) -> Vec<Move> {
+    let h = self.get_height(pos);
+
+    let heights = self.get_height_surrounding(pos, &self.bounds);
     println!("current height: {h}");
     println!("surrounding heights: {heights:?}");
 
-    Directions {
-      up: heights.up.and_then(|v| diff1(v, h)),
-      down: heights.down.and_then(|v| diff1(v, h)),
-      left: heights.left.and_then(|v| diff1(v, h)),
-      right: heights.right.and_then(|v| diff1(v, h)),
-    }
+    let up = heights
+      .up
+      .and_then(|v| if diff1(v, h) { Some(Move::Up) } else { None });
+    let down = heights
+      .down
+      .and_then(|v| if diff1(v, h) { Some(Move::Down) } else { None });
+    let left = heights
+      .left
+      .and_then(|v| if diff1(v, h) { Some(Move::Left) } else { None });
+    let right = heights
+      .right
+      .and_then(|v| if diff1(v, h) { Some(Move::Right) } else { None });
+    vec![up, down, left, right]
+      .into_iter()
+      .filter_map(|x| x)
+      .collect()
   }
 
-  fn get_height(&self, pos: &BoundedCoord) -> i64 {
+  fn get_height(&self, pos: &Coord) -> i64 {
     self.map[pos.y][pos.x]
   }
 
-  fn get_height_surrounding(&self, pos: &BoundedCoord) -> Directions<i64> {
+  fn get_height_surrounding(&self, pos: &Coord, bounds: &Bounds) -> Directions<i64> {
     Directions {
       up: if pos.y > 0 {
         Some(self.map[pos.y - 1][pos.x])
       } else {
         None
       },
-      down: if pos.y < pos.y_bound {
+      down: if pos.y < bounds.y {
         Some(self.map[pos.y + 1][pos.x])
       } else {
         None
@@ -101,7 +104,7 @@ impl Map {
       } else {
         None
       },
-      right: if pos.x < pos.x_bound {
+      right: if pos.x < bounds.x {
         Some(self.map[pos.y][pos.x + 1])
       } else {
         None
@@ -110,20 +113,16 @@ impl Map {
   }
 }
 
-fn diff1(up: i64, h: i64) -> Option<()> {
-  if (up - h > -1 && (up - h) <= 1) || (up == S || h == S || up == E || h == E) {
-    Some(())
-  } else {
-    None
-  }
+fn diff1(up: i64, h: i64) -> bool {
+  (up - h > -1 && (up - h) <= 1) || (up == S || h == S || up == E || h == E)
 }
 
 impl Solution for D12 {
   type Output = u64;
   fn pt_1(inp: crate::Input) -> Self::Output {
-    let map = Map::from(inp.get());
+    let map = Map::new(inp.get());
     println!("start: {:?}\nend:{:?}", map.pos, map.end);
-    println!("{:?}", map.get_possible_moves());
+    println!("{:?}", map.traverse(BreadthFirstSearch::default()));
 
     0
   }
